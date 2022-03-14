@@ -6,16 +6,6 @@ from predict import predict_response as find_response
 
 app = Flask(__name__)
 
-# def find_response(msg):
-#     return predict_response(msg)
-    # result = model.predict(keras.preprocessing.sequence.pad_sequences(tokenizer.texts_to_sequences([msg]),
-    #                                                                      truncating='post', maxlen=max_len))
-    # tag = lbl_encoder.inverse_transform([np.argmax(result)])
-    #
-    # for i in data['intents']:
-    #     if i['tag'] == tag:
-    #        return np.random.choice(i['responses'])
-
 @app.get("/")
 def index_get():
     return render_template("base.html")
