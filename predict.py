@@ -6,15 +6,15 @@ import pickle
 import numpy as np
 from keras.models import load_model
 
-model = load_model('model/chatbot_model.h5')
+model = load_model('chatbot_model.h5')
 import json
 import random
 import re
 from string import punctuation
 
 intents = json.loads(open(r'augmented_data.json').read())
-words = pickle.load(open('model/words.pkl', 'rb'))
-classes = pickle.load(open('model/classes.pkl', 'rb'))
+words = pickle.load(open('words.pkl', 'rb'))
+classes = pickle.load(open('classes.pkl', 'rb'))
 
 
 class helper:
@@ -60,12 +60,15 @@ class helper:
         sentence = helper.remove_punctuation(sentence)
         sentence = helper.remove_double_spaces(sentence)
         sentence = helper.remove_punctuation(sentence)
+        temp = sentence.split()
+        sentence = ' '.join([word for word in temp if not word.isdigit()])
         return sentence
 
 
 def process_input(sentence, words):
     # tokenize the pattern
     sentence = helper.preprocess(sentence)
+    print(sentence)
     sentence_words = nltk.word_tokenize(sentence)
     # stem each word - create short form for word
     sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
@@ -93,18 +96,27 @@ def predict_class(sentence, model):
 
 
 def print_response(ints, intents_json):
-    tag = ints[0]['intent']
+    tag1 = ints[0]['intent']
+    tag2 = ints[1]['intent']
     list_of_intents = intents_json['intents']
+    ans1 = ''
+    ans2 = ''
     for i in list_of_intents:
-        if (i['tag'] == tag):
-            print("class is: ", tag)
-            result = random.choice(i['responses'])
-            break
-    return result
+        if i['tag'] == tag1:
+            print("class is: ", tag1)
+            ans1 += random.choice(i['responses'])
+        if i['tag'] == tag2 and float(ints[1]['probability']) >= 0.1:
+            print("second class is: ", tag2)
+            ans2 += random.choice(i['responses'])
+    if ans2 == '':
+        return ans1
+    else:
+        return ans1 + '<br>' + '<br>' + ans2
 
 
 def predict_response(text):
     ints = predict_class(text, model)
+    print(ints)
     res = print_response(ints, intents)
     # print(ints)
     print("********************************")
