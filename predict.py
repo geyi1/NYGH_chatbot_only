@@ -6,15 +6,15 @@ import pickle
 import numpy as np
 from keras.models import load_model
 
-model = load_model('chatbot_model.h5')
+model = load_model('model/chatbot_model.h5')
 import json
 import random
 import re
 from string import punctuation
 
 intents = json.loads(open(r'augmented_data.json').read())
-words = pickle.load(open('words.pkl', 'rb'))
-classes = pickle.load(open('classes.pkl', 'rb'))
+words = pickle.load(open('model/words.pkl', 'rb'))
+classes = pickle.load(open('model/classes.pkl', 'rb'))
 
 
 class helper:
@@ -105,7 +105,7 @@ def print_response(ints, intents_json):
         if i['tag'] == tag1:
             print("class is: ", tag1)
             ans1 += random.choice(i['responses'])
-        if i['tag'] == tag2 and float(ints[1]['probability']) >= 0.1:
+        if i['tag'] == tag2 and tag2 != "thankyou" and float(ints[1]['probability']) >= 0.1:
             print("second class is: ", tag2)
             ans2 += random.choice(i['responses'])
     if ans2 == '':
