@@ -108,10 +108,11 @@ def print_response(ints, intents_json):
         if i['tag'] == tag2 and tag2 != "thankyou" and float(ints[1]['probability']) >= 0.1:
             print("second class is: ", tag2)
             ans2 += random.choice(i['responses'])
-    if ans2 == '':
-        return ans1
-    else:
-        return ans1 + '<br>' + '<br>' + ans2
+    return ans1
+    # if ans2 == '':
+    #     return ans1
+    # else:
+    #     return ans1 + '<br>' + '<br>' + ans2
 
 
 def predict_response(text):
